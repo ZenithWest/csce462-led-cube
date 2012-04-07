@@ -39,11 +39,11 @@ struct Circle {
 };
 
 struct Graphics {
-	static Point rotateXAxis(Point p, double rad);
-	static Point rotateYAxis(Point p, double rad);
-	static Point rotateZAxis(Point p, double rad);
-	static Point rotateYXZ(Point p, double radY, double radX, double radZ);
-	static Point translate(Point p, double y, double z);
+	Point rotateXAxis(Point p, double rad);
+	Point rotateYAxis(Point p, double rad);
+	Point rotateZAxis(Point p, double rad);
+	Point rotateYXZ(Point p, double radY, double radX, double radZ);
+	Point translate(Point p, double y, double z);
 };
 
 

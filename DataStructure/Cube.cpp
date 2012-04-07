@@ -109,7 +109,7 @@ void Cube::rotateXAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics.rotateXAxis(Point(x,y,z), rad));
+					setHIGH(Graphics().rotateXAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -127,7 +127,7 @@ void Cube::rotateYAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics.rotateYAxis(Point(x,y,z), rad));
+					setHIGH(Graphics().rotateYAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -145,7 +145,7 @@ void Cube::rotateZAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics.rotateZAxis(Point(x,y,z), rad));
+					setHIGH(Graphics().rotateZAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -165,7 +165,7 @@ void Cube::rotateYXZ(double degY, double degX, double degZ) {
 		for (double y=0; y<dimY; ++y) {
 			for (double z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics.rotateYXZ(Point(x,y,z), radY, radX, radZ));
+					setHIGH(Graphics().rotateYXZ(Point(x,y,z), radY, radX, radZ));
 				}
 			}
 		}
