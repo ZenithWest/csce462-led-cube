@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "VSPDE.h"
 
+
 struct Point {
 	double x;
 	double y;
@@ -35,6 +36,14 @@ struct Circle {
 	double thickness;
 	bool fill;
 	Circle(Point c, double r) : center(c), radius(r), thickness(1.0), fill(false) { }
+};
+
+struct Graphics {
+	static Point rotateXAxis(Point p, double rad);
+	static Point rotateYAxis(Point p, double rad);
+	static Point rotateZAxis(Point p, double rad);
+	static Point rotateYXZ(Point p, double radY, double radX, double radZ);
+	static Point translate(Point p, double y, double z);
 };
 
 
