@@ -70,10 +70,12 @@
   <ItemGroup>
     <ClInclude Include=".DataStructure.vsarduino.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="VSPDE.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="VSPDE.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
