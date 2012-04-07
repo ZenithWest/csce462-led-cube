@@ -1,6 +1,7 @@
 #ifndef CUBE_H
 #define CUBE_H
 
+#include <new.h>
 #include "Arduino.h"
 #include <stdlib.h> // for malloc and free
 #include "VSPDE.h"
@@ -16,10 +17,14 @@ struct Cube {
 	int dimY;
 	int dimZ;
 	int size;
+	int sizeXZ;
 	int sizeXY;
-	bool* data;
+	int sizeYZ;
+	bool* data1D;
+	bool*** data3D;
 
 	Cube(int x, int y, int z);
+	~Cube();
   
 	bool get(int x, int y, int z);	// Returns true if LED on, false otherwise
 	void set(int x, int y, int z, bool value);
@@ -33,7 +38,17 @@ struct Cube {
 	void setHIGH(Point p);
 	void setLOW(Point p);
 	bool flip(Point p);
+
+
 	void clear();
+	bool copy(Cube* dest, Cube* src); // Returns true if successful (same size)
+	bool copyFrom(Cube* src); // Returns true if successful (same size)
+	bool copyTo(Cube* dest); // Returns true if successful (same size)
+
+
+	void sendData();
+	void receiveData();
+
 
 	// Graphics
 	void drawLine(double x1, double y1, double z1, double x2, double y2, double z2);
@@ -48,11 +63,14 @@ struct Cube {
 	void drawSquare(Square);
 	void drawCircle(Circle circle);
 
-	void rotateXAxis(double deg);
-	void rotateYAxis(double deg);
-	void rotateZAxis(double deg);
-	void rotateYXZ(double degY, double degX, double degZ);
+	void rotateXAxis(Point p, double deg);
+	void rotateYAxis(Point p, double deg);
+	void rotateZAxis(Point p, double deg);
+	void rotateYXZ(Point p, double degY, double degX, double degZ);
 	void translate(double x, double y, double z);
+
+	bool validPoint(double x, double y, double z);
+	bool validPoint(Point p);
 };
 
 #endif
