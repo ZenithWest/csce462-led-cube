@@ -57,11 +57,11 @@ bool Cube::flip(int x, int y, int z) {
 }
 
 bool Cube::get(Point p) {
-	return get((int)p.x, (int)p.y, (int)p.z);
+	return get(round(p.x), round(p.y), round(p.z));
 }
 
 void Cube::set(Point p, bool value) {
-	set((int)p.x, (int)p.y, (int)p.z, value);
+	set(round(p.x), round(p.y), round(p.z), value);
 }
 
 void Cube::setHIGH(Point p) {
@@ -73,7 +73,7 @@ void Cube::setLOW(Point p) {
 }
 
 bool Cube::flip(Point p) {
-	return flip(p.x, p.y, p.z);
+	return flip(round(p.x), round(p.y), round(p.z));
 }
 
 void Cube::clear() {
@@ -109,7 +109,7 @@ void Cube::rotateXAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(x, round(y*cos(rad) + z*sin(rad)), round(-y*sin(rad) + z*cos(rad)));
+					setHIGH(Graphics.rotateXAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -127,7 +127,7 @@ void Cube::rotateYAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(round(x*cos(rad) - z*sin(rad)), y, round(x*sin(rad) + z*cos(rad)));
+					setHIGH(Graphics.rotateYAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -145,7 +145,7 @@ void Cube::rotateZAxis(double deg) {
 		for (int y=0; y<dimY; ++y) {
 			for (int z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(round(x*cos(rad) - y*sin(rad)), round(x*sin(rad) + y*cos(rad)), z);
+					setHIGH(Graphics.rotateZAxis(Point(x,y,z), rad));
 				}
 			}
 		}
@@ -161,16 +161,11 @@ void Cube::rotateYXZ(double degY, double degX, double degZ) {
 	double radY = PI*degY/180.0;
 	double radX = PI*degX/180.0;
 	double radZ = PI*degZ/180.0;
-	for (int x=0; x<dimX; ++x) {
-		for (int y=0; y<dimY; ++y) {
-			for (int z=0; x<dimZ; ++z) {
+	for (double x=0; x<dimX; ++x) {
+		for (double y=0; y<dimY; ++y) {
+			for (double z=0; x<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					double sinXZ = sin(radX) * sin(radZ);
-					double sinXcosY = sin(radX) * cos(radZ);
-					double xx = cos(radY) * cos(radX) * x + (cos(radY) * sinXcosY + sin(radY) * sin(radZ)) * y + (cos(radY) * sinXZ - sin(radY) * cos(radZ)) * z;
-					double yy = -sin(radX) * x + cos(radX) * cos(radZ) * y + cos(radX) * sin(radZ) * z;
-					double zz = sin(radY) * cos(radX) * x + (sin(radY) * sinXcosY - cos(radY) * sin(radZ)) * y + (sin(radY) * sinXZ + cos(radY) * cos(radZ)) * z;
-					setHIGH(round(xx), round(yy), round(zz));
+					setHIGH(Graphics.rotateYXZ(Point(x,y,z), radY, radX, radZ));
 				}
 			}
 		}
