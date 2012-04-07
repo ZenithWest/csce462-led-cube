@@ -1,5 +1,6 @@
-#include <stdlib.h> // for malloc and free
+#include "Arduino.h"
 #include "VSPDE.h"
+#include "Graphics.h"
 #include "Cube.h"
 
 Cube* cube;
