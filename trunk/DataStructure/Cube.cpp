@@ -29,6 +29,23 @@ void Cube::initializeData3D() {
 	}
 }
 
+void Cube::initializePinBaseList(int* pins, int num) {
+	pinBaseCount = num;
+	pinBaseList1D = (int*)malloc(pinBaseCount*sizeof(int));
+	memcpy(pinBaseList1D, pins, pinBaseCount*sizeof(int));
+
+	pinBaseList2D = (int**)malloc(pinBaseCount*sizeof(int*));
+	for(int x=0; x<dimX; x++) {
+		pinBaseList2D[x] = pinBaseList1D + x*pinBaseCount;
+	}
+}
+
+void Cube::initializePinLayerList(int* pins, int num) {
+	pinLayerCount = num;
+	pinLayerList = (int*)malloc(pinLayerCount*sizeof(int));
+	memcpy(pinLayerList, pins, pinLayerCount*sizeof(int));
+}
+
 void Cube::deallocateMemory() {
 	free(data1D);
 	data1D = NULL;
@@ -206,36 +223,24 @@ void Cube::BW_ReceiveData() {
 	
 }
 
-// My test code (Cube(1,5,3) what xyz means might change we need to decide on what is what)
 void Cube::BW_WritePins() {
 	
-	digitalWrite(26, HIGH);
-	digitalWrite(22, LOW);
-	digitalWrite(41, data3D[0][4][0]);
-	digitalWrite(43, data3D[0][3][0]);
-	digitalWrite(45, data3D[0][2][0]);
-	digitalWrite(47, data3D[0][1][0]);
-	digitalWrite(49, data3D[0][0][0]);
-	delay(10);
-	//delayMicroseconds(1);
 	
-	digitalWrite(22, HIGH);
-	digitalWrite(24, LOW);
-	digitalWrite(41, data3D[0][4][1]);
-	digitalWrite(43, data3D[0][3][1]);
-	digitalWrite(45, data3D[0][2][1]);
-	digitalWrite(47, data3D[0][1][1]);
-	digitalWrite(49, data3D[0][0][1]);
-	delay(10);
-	
-	digitalWrite(24, HIGH);
-	digitalWrite(26, LOW);
-	digitalWrite(41, data3D[0][4][2]);
-	digitalWrite(43, data3D[0][3][2]);
-	digitalWrite(45, data3D[0][2][2]);
-	digitalWrite(47, data3D[0][1][2]);
-	digitalWrite(49, data3D[0][0][2]);
-	delay(10);
+	for (int z=0; z<dimZ; ++z) {
+		if (z==0) {
+			digitalWrite(pinLayerList[dimZ-1], HIGH);
+			digitalWrite(pinLayerList[0], LOW);
+		} else {
+			digitalWrite(pinLayerList[z-1], HIGH);
+			digitalWrite(pinLayerList[z], LOW);
+		}
+		for (int x=0; x<dimX; ++x) {
+			for (int y=0; y<dimY; ++y) {
+				digitalWrite(pinBaseList2D[x][y], data3D[x][y][z]);
+			}
+		}
+		delay(5);
+	}
 }
 
 

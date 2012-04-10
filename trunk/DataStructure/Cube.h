@@ -25,6 +25,12 @@ struct Cube {
 	int sizeXZ;
 	int sizeXY;
 	int sizeYZ;
+	int* pinBaseList1D;
+	int** pinBaseList2D;
+	int pinBaseCount;
+	int pinBaseSize;
+	int* pinLayerList;
+	int pinLayerCount;
 
 	bool* data1D;
 	bool*** data3D;
@@ -32,6 +38,8 @@ struct Cube {
 	void initializeSize(int x, int y, int z);
 	void initializeData1D();
 	void initializeData3D();
+	void initializePinBaseList(int* pins, int num);
+	void initializePinLayerList(int* pins, int num);
 	void deallocateMemory();
 
 	Cube(int x, int y, int z);
