@@ -35,7 +35,6 @@ void setup() {
 
 	cube->initializePinBaseList(&pinBaseList[0], 5);
 	cube->initializePinLayerList(&pinLayerList[0], 3);
-
 }
 
 
