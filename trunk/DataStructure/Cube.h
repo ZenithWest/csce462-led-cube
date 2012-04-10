@@ -31,6 +31,7 @@ struct Cube {
 	int pinBaseSize;
 	int* pinLayerList;
 	int pinLayerCount;
+	Point center;
 
 	bool* data1D;
 	bool*** data3D;

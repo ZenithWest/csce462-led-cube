@@ -10,6 +10,10 @@ void Cube::initializeSize(int x, int y, int z) {
 	sizeXY = dimX*dimY;
 	sizeYZ = dimY*dimZ;
 	size = sizeXY*dimZ;
+
+	center.x = double(dimX)/2.0;
+	center.y = double(dimY)/2.0;
+	center.z = double(dimZ)/2.0;
 }
 
 // Initialize 3-dimensional data as contiguous array
@@ -211,14 +215,58 @@ void Cube::receiveData() {
 void Cube::BW_ReceiveData() {
 	delay(1);
 	if (Serial.available()) {
-		int led;
-		led = Serial.read() - '0';
+		int led = Serial.read() - '0';
 		if (Serial.available()) {
 			led *= 10;
 			led += Serial.read() - '0';
 		}
-
-		flip(0, led % 5, led / 5);
+		if (led >= 0 && led <= 14) {
+			flip(0, led % 5, led / 5);
+		} else if (led == 20) {
+			rotateXAxis(center, 30);
+		} else if (led == 21) {
+			rotateYAxis(center, 30);
+		} else if (led == 22) {
+			rotateZAxis(center, 30);
+		} else if (led == 99) {
+			rotateZAxis(center, 30);
+		} else if (led == 50) {
+			Point p1(0,0,0);
+			Point p2(dimX-1,dimY-1,dimZ-1);
+			Line line(p1, p2);
+			for (int i=0; i < 20; ++i) {
+				clear();
+				drawLine(line);
+				for (int k=0; k<50; ++k) {
+					BW_WritePins();
+				}
+				line = line.rotateX(45);
+			}
+		} else if (led == 51) {
+			Point p1(0,0,0);
+			Point p2(dimX-1,dimY-1,dimZ-1);
+			Line line(p1, p2);
+			for (int i=0; i < 20; ++i) {
+				clear();
+				drawLine(line);
+				for (int k=0; k<50; ++k) {
+					BW_WritePins();
+				}
+				line = line.rotateY(45);
+			}
+		} else if (led == 52) {
+			Point p1(0,0,0);
+			Point p2(dimX-1,dimY-1,dimZ-1);
+			Line line(p1, p2);
+			for (int i=0; i < 20; ++i) {
+				clear();
+				drawLine(line);
+				for (int k=0; k<50; ++k) {
+					BW_WritePins();
+				}
+				line = line.rotateZ(45);
+			}
+		}
 	}
 	
 }
@@ -256,7 +304,20 @@ void drawCircle(double x, double y, double z, double radius, double angle) {
 
 
 void Cube::drawLine(Point p1, Point p2) {
+	Line line(p1, p2);
+	for (int x=0; x<dimX; ++x) {
+		for (int y=0; y<dimY; ++y) {
+			for (int z=0; z<dimZ; ++z) {
+				if (line.distance(Point(x,y,z)) < 0.5) {
+					setHIGH(x,y,z);
+				}
+			}
+		}
+	}
+}
 
+void Cube::drawLine(Line line) {
+	drawLine(line.p1, line.p2);
 }
 
 void Cube::drawCircle(Point p1, double radius, double angle) {
@@ -270,9 +331,9 @@ void Cube::rotateXAxis(Point p, double deg) {
 	double rad = PI*deg/180.0;
 	for (int x=0; x<dimX; ++x) {
 		for (int y=0; y<dimY; ++y) {
-			for (int z=0; x<dimZ; ++z) {
+			for (int z=0; z<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateXAxis(Point(x,y,z)-p, rad)+p);
+					setHIGH(Graphics().rotateXAxis(Point(x,y,z), p, rad));
 				}
 			}
 		}
@@ -292,9 +353,9 @@ void Cube::rotateYAxis(Point p, double deg) {
 	
 	for (int x=0; x<dimX; ++x) {
 		for (int y=0; y<dimY; ++y) {
-			for (int z=0; x<dimZ; ++z) {
+			for (int z=0; z<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateYAxis(Point(x,y,z)-p, rad)+p);
+					setHIGH(Graphics().rotateYAxis(Point(x,y,z), p, rad));
 				}
 			}
 		}
@@ -314,9 +375,9 @@ void Cube::rotateZAxis(Point p, double deg) {
 	
 	for (int x=0; x<dimX; ++x) {
 		for (int y=0; y<dimY; ++y) {
-			for (int z=0; x<dimZ; ++z) {
+			for (int z=0; z<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateZAxis(Point(x,y,z)-p, rad)+p);
+					setHIGH(Graphics().rotateZAxis(Point(x,y,z), p, rad));
 				}
 			}
 		}
@@ -338,9 +399,9 @@ void Cube::rotateYXZ(Point p, double degY, double degX, double degZ) {
 	
 	for (double x=0; x<dimX; ++x) {
 		for (double y=0; y<dimY; ++y) {
-			for (double z=0; x<dimZ; ++z) {
+			for (double z=0; z<dimZ; ++z) {
 				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateYXZ(Point(x,y,z)-p, radY, radX, radZ)+p);
+					setHIGH(Graphics().rotateYXZ(Point(x,y,z), p, radY, radX, radZ));
 				}
 			}
 		}
