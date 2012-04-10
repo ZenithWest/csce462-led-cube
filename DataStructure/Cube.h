@@ -25,6 +25,7 @@ struct Cube {
 	int sizeXZ;
 	int sizeXY;
 	int sizeYZ;
+
 	bool* data1D;
 	bool*** data3D;
 
@@ -71,7 +72,8 @@ struct Cube {
 
 	void sendData();
 	void receiveData();
-
+	void BW_WritePins();
+	void BW_ReceiveData();
 
 
 	// Graphics

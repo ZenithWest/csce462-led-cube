@@ -15,6 +15,7 @@ void Cube::initializeSize(int x, int y, int z) {
 // Initialize 3-dimensional data as contiguous array
 void Cube::initializeData1D() {
 	data1D = (bool*)malloc(size*sizeof(bool)); //data1D = new bool[size];
+	clear();
 }
 
 // Initialize 3-dimensional data pointers (for faster access)
@@ -187,10 +188,54 @@ void Cube::sendData() {
 
 void Cube::receiveData() {
 	int i = 0;
-	while (Serial.available() > 0) {
-		data1D[i] = Serial.read();
-		++i;
+	Serial.readBytes((char*)data1D, size*sizeof(bool));
+}
+
+void Cube::BW_ReceiveData() {
+	delay(1);
+	if (Serial.available()) {
+		int led;
+		led = Serial.read() - '0';
+		if (Serial.available()) {
+			led *= 10;
+			led += Serial.read() - '0';
+		}
+
+		flip(0, led % 5, led / 5);
 	}
+	
+}
+
+// My test code (Cube(1,5,3) what xyz means might change we need to decide on what is what)
+void Cube::BW_WritePins() {
+	
+	digitalWrite(26, HIGH);
+	digitalWrite(22, LOW);
+	digitalWrite(41, data3D[0][4][0]);
+	digitalWrite(43, data3D[0][3][0]);
+	digitalWrite(45, data3D[0][2][0]);
+	digitalWrite(47, data3D[0][1][0]);
+	digitalWrite(49, data3D[0][0][0]);
+	delay(10);
+	//delayMicroseconds(1);
+	
+	digitalWrite(22, HIGH);
+	digitalWrite(24, LOW);
+	digitalWrite(41, data3D[0][4][1]);
+	digitalWrite(43, data3D[0][3][1]);
+	digitalWrite(45, data3D[0][2][1]);
+	digitalWrite(47, data3D[0][1][1]);
+	digitalWrite(49, data3D[0][0][1]);
+	delay(10);
+	
+	digitalWrite(24, HIGH);
+	digitalWrite(26, LOW);
+	digitalWrite(41, data3D[0][4][2]);
+	digitalWrite(43, data3D[0][3][2]);
+	digitalWrite(45, data3D[0][2][2]);
+	digitalWrite(47, data3D[0][1][2]);
+	digitalWrite(49, data3D[0][0][2]);
+	delay(10);
 }
 
 
