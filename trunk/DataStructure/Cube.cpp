@@ -294,12 +294,12 @@ void Cube::BW_WritePins() {
 
 // Graphics
 
-void drawLine(double x1, double y1, double z1, double x2, double y2, double z2) {
-
+void Cube::drawLine(double x1, double y1, double z1, double x2, double y2, double z2) {
+	drawLine(Point(x1,y1,z1),Point(x2,y2,z2));
 }
 
-void drawCircle(double x, double y, double z, double radius, double angle) {
-
+void Cube::drawCircle(double x, double y, double z, double radius, double angle) {
+	Cube::drawCircle(Point(x,y,z),radius,angle);
 }
 
 
@@ -317,11 +317,11 @@ void Cube::drawLine(Point p1, Point p2) {
 }
 
 void Cube::drawLine(Line line) {
-	drawLine(line.p1, line.p2);
+	Cube::drawLine(line.p1, line.p2);
 }
 
 void Cube::drawCircle(Point p1, double radius, double angle) {
-
+	
 }
 
 void Cube::rotateXAxis(Point p, double deg) {
