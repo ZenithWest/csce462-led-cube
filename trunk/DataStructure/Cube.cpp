@@ -151,6 +151,10 @@ void Cube::clear() {
 	memset(data1D, 0, size*sizeof(bool));
 }
 
+void Cube::setAll() {
+	memset(data1D, 1, size*sizeof(bool));
+}
+
 
 /////////// COPY //////////////////
 
@@ -220,199 +224,56 @@ void Cube::BW_ReceiveData() {
 			led *= 10;
 			led += Serial.read() - '0';
 		}
-		if (led >= 0 && led <= 14) {
-			flip(0, led % 5, led / 5);
-		} else if (led == 20) {
-			rotateXAxis(center, 30);
-		} else if (led == 21) {
-			rotateYAxis(center, 30);
-		} else if (led == 22) {
-			rotateZAxis(center, 30);
+
+		led -= 1;
+		
+		char str[12];
+
+		sprintf(str, "(%d,%d,%d)\n", (led / 9) % 3, (led / 3) % 3, led % 3);
+		Serial.print(str);
+		if (led > 0 && led <= 27) {
+			flip((led / 9)  % 3, (led / 3) % 3, led % 3);
 		} else if (led == 99) {
-			rotateZAxis(center, 30);
-		} else if (led == 50) {
-			Point p1(0,0,0);
-			Point p2(dimX-1,dimY-1,dimZ-1);
-			Line line(p1, p2);
-			for (int i=0; i < 20; ++i) {
-				clear();
-				drawLine(line);
-				for (int k=0; k<50; ++k) {
-					BW_WritePins();
-				}
-				line = line.rotateX(45);
-			}
-		} else if (led == 51) {
-			Point p1(0,0,0);
-			Point p2(dimX-1,dimY-1,dimZ-1);
-			Line line(p1, p2);
-			for (int i=0; i < 20; ++i) {
-				clear();
-				drawLine(line);
-				for (int k=0; k<50; ++k) {
-					BW_WritePins();
-				}
-				line = line.rotateY(45);
-			}
-		} else if (led == 52) {
-			Point p1(0,0,0);
-			Point p2(dimX-1,dimY-1,dimZ-1);
-			Line line(p1, p2);
-			for (int i=0; i < 20; ++i) {
-				clear();
-				drawLine(line);
-				for (int k=0; k<50; ++k) {
-					BW_WritePins();
-				}
-				line = line.rotateZ(45);
-			}
+			clear();
+		} else if (led == 98) {
+			setAll();
 		}
+		
+
+		while (Serial.available()) led = Serial.read();
 	}
 	
 }
 
 void Cube::BW_WritePins() {
-	
+
 	
 	for (int z=0; z<dimZ; ++z) {
 		if (z==0) {
+			//pinMode(pinLayerList[dimZ-1], OUTPUT);
 			digitalWrite(pinLayerList[dimZ-1], HIGH);
 			digitalWrite(pinLayerList[0], LOW);
+			//pinMode(pinLayerList[0], INPUT);
 		} else {
+			//pinMode(pinLayerList[z-1], OUTPUT);
 			digitalWrite(pinLayerList[z-1], HIGH);
 			digitalWrite(pinLayerList[z], LOW);
+			//pinMode(pinLayerList[z], INPUT);
 		}
 		for (int x=0; x<dimX; ++x) {
 			for (int y=0; y<dimY; ++y) {
-				digitalWrite(pinBaseList2D[x][y], data3D[x][y][z]);
+				if (data3D[x][y][z]) {
+					//pinMode(pinBaseList2D[x][y], OUTPUT);
+					digitalWrite(pinBaseList2D[x][y], HIGH);
+				} else {
+					digitalWrite(pinBaseList2D[x][y], LOW);
+					//pinMode(pinBaseList2D[x][y], INPUT);
+				}
+				
 			}
 		}
 		delay(5);
 	}
-}
-
-
-// Graphics
-
-void Cube::drawLine(double x1, double y1, double z1, double x2, double y2, double z2) {
-	drawLine(Point(x1,y1,z1),Point(x2,y2,z2));
-}
-
-void Cube::drawCircle(double x, double y, double z, double radius, double angle) {
-	Cube::drawCircle(Point(x,y,z),radius,angle);
-}
-
-
-void Cube::drawLine(Point p1, Point p2) {
-	Line line(p1, p2);
-	for (int x=0; x<dimX; ++x) {
-		for (int y=0; y<dimY; ++y) {
-			for (int z=0; z<dimZ; ++z) {
-				if (line.distance(Point(x,y,z)) < 0.5) {
-					setHIGH(x,y,z);
-				}
-			}
-		}
-	}
-}
-
-void Cube::drawLine(Line line) {
-	Cube::drawLine(line.p1, line.p2);
-}
-
-void Cube::drawCircle(Point p1, double radius, double angle) {
-	
-}
-
-void Cube::rotateXAxis(Point p, double deg) {
-	Cube* cube = new Cube(dimX, dimY, dimZ);
-	memcpy(cube->data1D, data1D, size*sizeof(bool));
-	clear();
-	double rad = PI*deg/180.0;
-	for (int x=0; x<dimX; ++x) {
-		for (int y=0; y<dimY; ++y) {
-			for (int z=0; z<dimZ; ++z) {
-				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateXAxis(Point(x,y,z), p, rad));
-				}
-			}
-		}
-	}
-
-	cube->deallocateMemory();
-	delete cube;
-}
-
-void Cube::rotateYAxis(Point p, double deg) {
-	Cube* cube = new Cube(dimX, dimY, dimZ);
-	
-	memcpy(cube->data1D, data1D, size*sizeof(bool));
-	clear();
-	
-	double rad = PI*deg/180.0;
-	
-	for (int x=0; x<dimX; ++x) {
-		for (int y=0; y<dimY; ++y) {
-			for (int z=0; z<dimZ; ++z) {
-				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateYAxis(Point(x,y,z), p, rad));
-				}
-			}
-		}
-	}
-	
-	cube->deallocateMemory();
-	delete cube;
-}
-
-void Cube::rotateZAxis(Point p, double deg) {
-	Cube* cube = new Cube(dimX, dimY, dimZ);
-	
-	cube->copy(cube, this);
-	clear();
-	
-	double rad = PI*deg/180.0;
-	
-	for (int x=0; x<dimX; ++x) {
-		for (int y=0; y<dimY; ++y) {
-			for (int z=0; z<dimZ; ++z) {
-				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateZAxis(Point(x,y,z), p, rad));
-				}
-			}
-		}
-	}
-	
-	cube->deallocateMemory();
-	delete cube;
-}
-
-void Cube::rotateYXZ(Point p, double degY, double degX, double degZ) {
-	Cube* cube = new Cube(dimX, dimY, dimZ);
-	
-	cube->copy(cube, this);
-	clear();
-	
-	double radY = PI*degY/180.0;
-	double radX = PI*degX/180.0;
-	double radZ = PI*degZ/180.0;
-	
-	for (double x=0; x<dimX; ++x) {
-		for (double y=0; y<dimY; ++y) {
-			for (double z=0; z<dimZ; ++z) {
-				if (cube->get(x, y, z)) {
-					setHIGH(Graphics().rotateYXZ(Point(x,y,z), p, radY, radX, radZ));
-				}
-			}
-		}
-	}
-	
-	cube->deallocateMemory();
-	delete cube;
-}
-
-void Cube::translate(double x, double y, double z) {
-
 }
 
 bool Cube::validPoint(double x, double y, double z) {

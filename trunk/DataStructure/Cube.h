@@ -6,7 +6,6 @@
 #include "Arduino.h"
 #include <stdlib.h> // for malloc and free
 #include "Graphics.h"
-#include <math.h>
 
 struct Graphics;
 struct Point;
@@ -66,7 +65,7 @@ struct Cube {
 
 
 	void clear();
-
+	void setAll();
 
 	Cube* copy(); // Creates a new cube from this and returns pointer to new cube
 	Cube& copy(Cube& dest, const Cube& src); // Copies data from src to dest and returns reference to dest
@@ -85,24 +84,6 @@ struct Cube {
 	void BW_ReceiveData();
 
 
-	// Graphics
-	void drawLine(double x1, double y1, double z1, double x2, double y2, double z2);
-	void drawSquare(double x1, double y1, double z1, double x2, double y2, double z2);
-	void drawCircle(double x, double y, double z, double radius, double angle);
-
-	void drawLine(Point p1, Point p2);
-	void drawSquare(Point p1, Point p2);
-	void drawCircle(Point p1, double radius, double angle);
-
-	void drawLine(Line line);
-	void drawSquare(Square);
-	void drawCircle(Circle circle);
-
-	void rotateXAxis(Point p, double deg);
-	void rotateYAxis(Point p, double deg);
-	void rotateZAxis(Point p, double deg);
-	void rotateYXZ(Point p, double degY, double degX, double degZ);
-	void translate(double x, double y, double z);
 
 	bool validPoint(double x, double y, double z);
 	bool validPoint(double x, double y, double z) const;
