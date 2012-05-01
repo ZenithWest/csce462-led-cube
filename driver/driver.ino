@@ -1,34 +1,40 @@
 #include <string.h>
 
+#define PLANECOUNT 3
 #define ROWSIZE 3
-#define CUBESIZE ROWSIZE*ROWSIZE*ROWSIZE
+#define PLANESIZE ROWSIZE*ROWSIZE
+#define CUBESIZE PLANECOUNT*PLANESIZE
+#define USEC_DELAY 4000
+
+/* NOTE: Arduino micros() rolls over after ~70 minutes */
+/* WARNING: Maximum plane size is 49 by hardware limitation */
 
 bool cube[CUBESIZE];
-bool buffer[ROWSIZE];
+char curPlane = 0;
+long waitUntil = 0;
+char serialCounter = 0;
 
 // Pin Definitions
-const int row[3] = { 14, 15, 16};
-const int plane[3] = {17, 18, 19};
-const int active[] = { 9, 2, 3, 4, 5, 6, 7, 8 };
+/* MSB Oriented decoder */
+const char planeDecoder[3] = {11, 12, 13};
+const char active[] = { 2, 3, 4, 5, 6, 7, 8,
+                       9, 10, 14, 15, 16, 17, 18,
+                       19, 20, 21, 22, 23, 24, 25,
+                       26, 27, 28, 29, 30, 31, 32,
+                       33, 34, 35, 36, 37, 38, 39,
+                       40, 41, 42, 43, 44, 45, 46,
+                       47, 48, 49, 50, 51, 52, 53 };
 
 void setup() {
   for ( unsigned i = 0; i < CUBESIZE; ++i ) {
     cube[i] = false;
   }
-  pinMode( row[0], OUTPUT );
-  pinMode( row[1], OUTPUT );
-  pinMode( row[2], OUTPUT );
-  pinMode( plane[0], OUTPUT );
-  pinMode( plane[1], OUTPUT );
-  pinMode( plane[2], OUTPUT );
-  pinMode( active[0], OUTPUT );
-  pinMode( active[1], OUTPUT );
-  pinMode( active[2], OUTPUT );
-  pinMode( active[3], OUTPUT );
-  pinMode( active[4], OUTPUT );
-  pinMode( active[5], OUTPUT );
-  pinMode( active[6], OUTPUT );
-  pinMode( active[7], OUTPUT );
+  pinMode( planeDecoder[0], OUTPUT );
+  pinMode( planeDecoder[1], OUTPUT );
+  pinMode( planeDecoder[2], OUTPUT );
+  
+  for ( unsigned i = 0; i < 49; ++i )
+    pinMode( active[i], OUTPUT );
   
   Serial.begin(9600);
   Serial.println("L3D v0.1 Initialized.");
@@ -37,29 +43,39 @@ void setup() {
 void loop() {
   // Receive serial data
   while ( Serial.available() ) {
+    char data = Serial.read();
     Serial.print("Received: ");
-    Serial.println( (char) Serial.read() );
+    Serial.print( data );
+    Serial.print( "\t" );
+    Serial.println( data, BIN );
+    
+    // Put to cube
+    cube[serialCounter*8] = data & 0x80;
+    cube[serialCounter*8 + 1] = data & 0x40;
+    cube[serialCounter*8 + 2] = data & 0x20;
+    cube[serialCounter*8 + 3] = data & 0x10;
+    cube[serialCounter*8 + 4] = data & 0x8;
+    cube[serialCounter*8 + 5] = data & 0x4;
+    cube[serialCounter*8 + 6] = data & 0x2;
+    cube[serialCounter*8 + 7] = data & 0x1;
+    ++serialCounter;
   }
+  serialCounter = 0;
   
-  // Refresh cube
-  for ( unsigned curPlane = 0; curPlane < ROWSIZE; ++curPlane ) {
-    // set decoder
-    digitalWrite( plane[0], curPlane & 0x1 );
-    digitalWrite( plane[1], curPlane & 0x2 );
-    digitalWrite( plane[2], curPlane & 0x4 );
-    
-    for ( unsigned curRow = 0; curRow < ROWSIZE; ++curRow ) {
-      // set Row decoder
-      digitalWrite( row[0], curRow & 0x1 );
-      digitalWrite( row[1], curRow & 0x2 );
-      digitalWrite( row[2], curRow & 0x4 );
-    
-      memcpy( buffer, cube + curPlane*ROWSIZE*ROWSIZE + curRow*ROWSIZE, ROWSIZE);
-      
-      // Possible Optimization: Unroll this loop
-      for ( unsigned u = 0; u < ROWSIZE; ++u ) {
-        digitalWrite( row[u], curRow & (1 << u) );
-      }
-    }
-  }
+  // Sleep if not time to refresh
+  while ( micros() < waitUntil );
+  
+  // Refresh next plane
+  char planeSelect[3] = { curPlane & 0x1, curPlane & 0x2, curPlane & 0x4 };
+  digitalWrite(planeDecoder[0], planeSelect[0]);
+  digitalWrite(planeDecoder[1], planeSelect[1]);
+  digitalWrite(planeDecoder[2], planeSelect[2]);
+  
+  // Hmm, maybe this can be unrolled? Does it need to be? *shrugs*
+  for (unsigned u = 0; u < PLANESIZE; ++u)
+    digitalWrite(active[u], cube[curPlane*PLANESIZE + u]);
+  
+  // Next Plane
+  curPlane == PLANECOUNT - 1 ? curPlane = 0 : ++curPlane;
+  waitUntil = micros() + USEC_DELAY;
 }
