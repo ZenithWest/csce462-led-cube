@@ -1,4 +1,4 @@
-/*#include "Snake.h"
+#include "Snake.h"
 Snake::Snake(int s)
 {
 	size = s;
@@ -7,11 +7,11 @@ Snake::Snake(int s)
 }
 void Snake::Reset()
 {
-	while(snake.size > 0)
+	while(snake.size() > 0)
 	{
 		Point* p = snake.front();
 		delete p;
-		snake.erase(p);
+		snake.erase(snake.begin(), p);
 	}
 	snake.push_back(new Point(1,0,0));
 	snake.push_back(new Point(2,0,0));
@@ -53,12 +53,12 @@ void Snake::Move(int x, int y, int z)
 {
 	if(x == apple->x && y == apple->y && z == apple->z)
 		EatApple();
+	Point* p = new Point(x,y,z);
 	if(grow)
 	{
-		//add p to front;
+		snake.insert(snake.begin(),p);
 		return;
 	}
-	Point* p = new Point(x,y,z);
 	if(CheckIfInsidePlayer(p))
 	{
 		delete p;
@@ -70,7 +70,8 @@ void Snake::Move(int x, int y, int z)
 		delete p;
 		GameOver();
 	}
-	//Add p to front and remove last element
+	snake.insert(snake.begin(),p);
+	snake.erase(snake.begin() + snake.size()-1);
 }
 void Snake::GameOver()
 {
@@ -81,4 +82,4 @@ void Snake::Move()
 	//This Function needs to be called every XXXXX seconds? Not sure where we want to do it
 	//Get From joystick TODO
 	Move(0,0,1);
-}*/
+}
