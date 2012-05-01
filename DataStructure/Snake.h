@@ -8,16 +8,18 @@
 #include <math.h>
 #include "Graphics.h"
 #include "Cube.h"
+#include <iterator> 
+#include <vector>
 /*
 	Cube makes the assumption that the size doesn't change (copy and assignment would crash otherwise)
 
 */
 
-/*
+
 class Snake {
 	Point* apple;
 	Cube* cube;
-	vector<Point*> snake;
+	std::vector<Point*> snake;
 	int size;
 	bool grow;
 	Snake(int size);
@@ -30,5 +32,5 @@ class Snake {
 	bool CheckIfInsidePlayer(Point* p);
 	void GameOver();
 };
-*/
+
 #endif
