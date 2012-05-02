@@ -231,7 +231,7 @@ void Cube::BW_ReceiveData() {
 
 		sprintf(str, "(%d,%d,%d)\n", int(ledM1 / sizeXY) % 3, int(ledM1 / dimY) % 3, int(ledM1) % 3);
 		Serial.print(str);
-		if (led >= 0 && led <= sizeXY * dimZ) {
+		if (led >= 0 && led <= sizeXYZ) {
 			flip((ledM1) % dimX, (ledM1 / dimX) % dimY, (ledM1 / sizeXY) % dimZ);
 		} else if (led == 99) {
 			clear();
