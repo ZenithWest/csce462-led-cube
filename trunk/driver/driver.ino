@@ -1,11 +1,11 @@
 #include <string.h>
 
 #define BAUD 115200
-#define PLANECOUNT 3
+#define PLANECOUNT 6
 #define ROWSIZE 3
 #define PLANESIZE ROWSIZE*ROWSIZE
 #define CUBESIZE PLANECOUNT*PLANESIZE
-#define USEC_DELAY 12000
+#define USEC_DELAY 3000
 #define DEMO_DELAY 400
 
 /* NOTE: Arduino micros() rolls over after ~70 minutes */
@@ -29,23 +29,74 @@ const char active[] = { 2, 3, 4, 5, 6, 7, 8,
                        47, 48, 49, 50, 51, 52, 53 };
 */
 
-const char planeDecoder[3] = {22, 24, 26};
+const char planeDecoder[6] = {22, 24, 26, 23, 25, 27};
 const char active[] = { 52, 50, 48, 46, 44, 42, 40,
                         38, 36 };
                         
-const bool scene[4][CUBESIZE] = {
+const bool scene[10][CUBESIZE] = {
+  // Go up
   { true, true, true, true, false, true, true, true, true,
    false, false, false, false, true, false, false, false, false,
-   false, false, false, false, false, false, false, false, false},
+   false, false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false, false },
   { false, false, false, false, false, false, false, false, false,
     true, true, true, true, false, true, true, true, true,
-    false, false, false, false, true, false, false, false, false},
+    false, false, false, false, true, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
   { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, true, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
+  { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false, 
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, true, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
+  {  false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, true, false, false, false, false },
+    
+    // And go down
+  { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
     false, false, false, false, true, false, false, false, false,
     true, true, true, true, false, true, true, true, true},
-  { false, false, false, false, true, false, false, false, false,
+  { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, true, false, false, false, false,
     true, true, true, true, false, true, true, true, true,
     false, false, false, false, false, false, false, false, false},
+  { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, true, false, false, false, false,
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
+  { false, false, false, false, false, false, false, false, false,
+    false, false, false, false, true, false, false, false, false,
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
+  { false, false, false, false, true, false, false, false, false,
+    true, true, true, true, false, true, true, true, true,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false },
 };
 
 long nextScene = 0;
@@ -58,6 +109,9 @@ void setup() {
   pinMode( planeDecoder[0], OUTPUT );
   pinMode( planeDecoder[1], OUTPUT );
   pinMode( planeDecoder[2], OUTPUT );
+  pinMode( planeDecoder[3], OUTPUT );
+  pinMode( planeDecoder[4], OUTPUT );
+  pinMode( planeDecoder[5], OUTPUT );
   
   for ( unsigned i = 0; i < 9; ++i )
     pinMode( active[i], OUTPUT );
@@ -68,7 +122,7 @@ void setup() {
 
 void loop() {
   // Receive serial data
-  while ( Serial.available() ) {
+  //while ( Serial.available() ) {
     /*
     char data = Serial.read();
     data -= 65;
@@ -78,12 +132,12 @@ void loop() {
     Serial.println( data, BIN );
     cube[ (unsigned char) data ] ^= 1;
     */
-    Serial.readBytes(cube, CUBESIZE);
-  }
+    //Serial.readBytes(cube, CUBESIZE);
+  //}
   if ( millis() > nextScene ) {
     memcpy(cube, scene[curScene], CUBESIZE);
     nextScene = millis() + DEMO_DELAY;
-    curScene == 3 ? curScene = 0 : curScene++;
+    curScene == 9 ? curScene = 0 : curScene++;
   }
     
     // Put to cube
@@ -112,10 +166,14 @@ void loop() {
   while ( micros() < waitUntil );
   
   // Refresh next plane
-  char planeSelect[3] = { curPlane == 0x0, curPlane == 0x1, curPlane == 0x2 };
+  char planeSelect[6] = { curPlane == 0x0, curPlane == 0x1, curPlane == 0x2, curPlane == 0x3,
+                           curPlane == 0x4, curPlane == 0x5 };
   digitalWrite(planeDecoder[0], planeSelect[0]);
   digitalWrite(planeDecoder[1], planeSelect[1]);
   digitalWrite(planeDecoder[2], planeSelect[2]);
+  digitalWrite(planeDecoder[3], planeSelect[3]);
+  digitalWrite(planeDecoder[4], planeSelect[4]);
+  digitalWrite(planeDecoder[5], planeSelect[5]);
   
   // Hmm, maybe this can be unrolled? Does it need to be? *shrugs*
   for (unsigned u = 0; u < PLANESIZE; ++u)
