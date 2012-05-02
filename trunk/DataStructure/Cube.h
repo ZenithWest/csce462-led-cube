@@ -24,6 +24,7 @@ struct Cube {
 	int sizeXZ;
 	int sizeXY;
 	int sizeYZ;
+	int sizeXYZ;
 	int* pinBaseList1D;
 	int** pinBaseList2D;
 	int pinBaseCount;
