@@ -10,6 +10,7 @@ void Cube::initializeSize(int x, int y, int z) {
 	sizeXY = dimX*dimY;
 	sizeYZ = dimY*dimZ;
 	size = sizeXY*dimZ;
+	sizeXYZ = size;
 
 	center.x = double(dimX)/2.0;
 	center.y = double(dimY)/2.0;
@@ -40,7 +41,7 @@ void Cube::initializePinBaseList(int* pins, int num) {
 
 	pinBaseList2D = (int**)malloc(pinBaseCount*sizeof(int*));
 	for(int x=0; x<dimX; x++) {
-		pinBaseList2D[x] = pinBaseList1D + x*pinBaseCount;
+		pinBaseList2D[x] = pinBaseList1D + x*dimX;
 	}
 }
 
@@ -225,14 +226,13 @@ void Cube::BW_ReceiveData() {
 			led += Serial.read() - '0';
 		}
 
-		led -= 1;
-		
+		int ledM1 = led - 1;
 		char str[12];
 
-		sprintf(str, "(%d,%d,%d)\n", (led / 9) % 3, (led / 3) % 3, led % 3);
+		sprintf(str, "(%d,%d,%d)\n", int(ledM1 / sizeXY) % 3, int(ledM1 / dimY) % 3, int(ledM1) % 3);
 		Serial.print(str);
-		if (led > 0 && led <= 27) {
-			flip((led / 9)  % 3, (led / 3) % 3, led % 3);
+		if (led >= 0 && led <= sizeXY * dimZ) {
+			flip((ledM1) % dimX, (ledM1 / dimX) % dimY, (ledM1 / sizeXY) % dimZ);
 		} else if (led == 99) {
 			clear();
 		} else if (led == 98) {
@@ -249,30 +249,26 @@ void Cube::BW_WritePins() {
 
 	
 	for (int z=0; z<dimZ; ++z) {
+		
 		if (z==0) {
-			//pinMode(pinLayerList[dimZ-1], OUTPUT);
-			digitalWrite(pinLayerList[dimZ-1], HIGH);
-			digitalWrite(pinLayerList[0], LOW);
-			//pinMode(pinLayerList[0], INPUT);
+			digitalWrite(pinLayerList[dimZ-1], 0);
+			digitalWrite(pinLayerList[0], 1);
 		} else {
-			//pinMode(pinLayerList[z-1], OUTPUT);
-			digitalWrite(pinLayerList[z-1], HIGH);
-			digitalWrite(pinLayerList[z], LOW);
-			//pinMode(pinLayerList[z], INPUT);
+			digitalWrite(pinLayerList[z-1], 0);
+			digitalWrite(pinLayerList[z], 1);
 		}
+		
 		for (int x=0; x<dimX; ++x) {
 			for (int y=0; y<dimY; ++y) {
 				if (data3D[x][y][z]) {
-					//pinMode(pinBaseList2D[x][y], OUTPUT);
-					digitalWrite(pinBaseList2D[x][y], HIGH);
+					digitalWrite(pinBaseList2D[x][y], 0);
 				} else {
-					digitalWrite(pinBaseList2D[x][y], LOW);
-					//pinMode(pinBaseList2D[x][y], INPUT);
+					digitalWrite(pinBaseList2D[x][y], 1);
 				}
 				
 			}
 		}
-		delay(250);
+		delay(1);
 	}
 }
 

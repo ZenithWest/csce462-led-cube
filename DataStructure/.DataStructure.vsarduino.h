@@ -9,6 +9,6 @@ extern "C" void __cxa_pure_virtual() {}
 void setup();
 void loop();
 
-#include "C:\Users\BriceScott\Desktop\arduino-1.0\hardware\arduino\variants\mega\pins_arduino.h" 
-#include "C:\Users\BriceScott\Desktop\arduino-1.0\hardware\arduino\cores\arduino\Arduino.h"
-#include "C:\Users\BriceScott\Desktop\Project 3\DataStructure\DataStructure.pde" 
+#include "O:\arduino-1.0\hardware\arduino\variants\mega\pins_arduino.h" 
+#include "O:\arduino-1.0\hardware\arduino\cores\arduino\Arduino.h"
+#include "O:\CLASSES - SPRING 2012\CSCE 462\LED Cube Display\DataStructure\DataStructure.pde" 
