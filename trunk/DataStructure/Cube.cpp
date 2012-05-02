@@ -166,6 +166,10 @@ void Cube::setColumn(int columnX, int columnY, bool value) {
 	}
 }
 
+void Cube::flipPin(int pin) {
+	flip(pinNum2Point(pin));
+}
+
 void Cube::clear() {
 	memset(data1D, 0, size*sizeof(bool));
 }

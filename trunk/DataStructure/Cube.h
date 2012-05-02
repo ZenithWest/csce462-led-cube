@@ -66,6 +66,7 @@ struct Cube {
 	void setLayer(int layer, bool value);
 	void setColumn(int columnX, int columnY, bool value);
 	void setPin(int pin, bool value);
+	void flipPin(int pin);
 
 	void clear();
 	void setAll();
