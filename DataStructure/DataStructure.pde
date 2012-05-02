@@ -2,8 +2,10 @@
 #include "Arduino.h"
 #include "VSPDE.h"
 #include "Cube.h"
+#include "Pattern.h"
 
 Cube* cube;
+Pattern* pattern;
 
 int pinBaseList[9] = { 52, 50, 48, 46, 44, 42, 40, 38, 36 };
 int pinLayerList[6] = {22, 24, 26, 23, 25, 27};
@@ -23,11 +25,16 @@ void setup() {
 
 	cube->initializePinBaseList(&pinBaseList[0], 9);
 	cube->initializePinLayerList(&pinLayerList[0], 6);
+
+	pattern = new Pattern(cube);
 }
 
 
+int counter = 0;
+
 void loop() {
   cube->BW_WritePins();
-  cube->BW_ReceiveData();
+  pattern->receiveData();
+  pattern->nextFrame();
 }
 
