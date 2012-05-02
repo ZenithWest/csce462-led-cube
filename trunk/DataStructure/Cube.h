@@ -55,15 +55,17 @@ struct Cube {
 	void setHIGH(int x, int y, int z);	// Turns LED on
 	void setLOW(int x, int y, int z);	// Turns LED off
 	bool flip(int x, int y, int z);	// Flips and returns new value
-
-	
+		
 	bool get(Point p);
 	bool get(Point p) const;
 	void set(Point p, bool value);
 	void setHIGH(Point p);
 	void setLOW(Point p);
 	bool flip(Point p);
-
+	
+	void setLayer(int layer, bool value);
+	void setColumn(int columnX, int columnY, bool value);
+	void setPin(int pin, bool value);
 
 	void clear();
 	void setAll();
@@ -90,6 +92,10 @@ struct Cube {
 	bool validPoint(double x, double y, double z) const;
 	bool validPoint(Point p);
 	bool validPoint(Point p) const;
+
+	
+
+	Point pinNum2Point(int num);
 };
 
 #endif

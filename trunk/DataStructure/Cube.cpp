@@ -148,6 +148,24 @@ bool Cube::flip(Point p) {
 	return flip(round(p.x), round(p.y), round(p.z));
 }
 
+void Cube::setLayer(int layer, bool value) {
+	for(int x=0; x<dimX; ++x) {
+		for(int y=0; y<dimY; ++y) {
+			set(x, y, layer, value);
+		}
+	}
+}
+
+void Cube::setPin(int pin, bool value) {
+	set(pinNum2Point(pin), value);
+}
+
+void Cube::setColumn(int columnX, int columnY, bool value) {
+	for(int z=0; z<dimZ; ++z) {
+		set(columnX, columnY, z, value);
+	}
+}
+
 void Cube::clear() {
 	memset(data1D, 0, size*sizeof(bool));
 }
@@ -229,10 +247,10 @@ void Cube::BW_ReceiveData() {
 		int ledM1 = led - 1;
 		char str[12];
 
-		sprintf(str, "(%d,%d,%d)\n", int(ledM1 / sizeXY) % 3, int(ledM1 / dimY) % 3, int(ledM1) % 3);
+		sprintf(str, "(%d,%d,%d)\n", int(ledM1) % dimX, int(ledM1 / dimX) % dimY, int(ledM1 / sizeXY) % dimZ);
 		Serial.print(str);
 		if (led >= 0 && led <= sizeXYZ) {
-			flip((ledM1) % dimX, (ledM1 / dimX) % dimY, (ledM1 / sizeXY) % dimZ);
+			flip(pinNum2Point(ledM1));
 		} else if (led == 99) {
 			clear();
 		} else if (led == 98) {
@@ -246,10 +264,7 @@ void Cube::BW_ReceiveData() {
 }
 
 void Cube::BW_WritePins() {
-
-	
 	for (int z=0; z<dimZ; ++z) {
-		
 		if (z==0) {
 			digitalWrite(pinLayerList[dimZ-1], 0);
 			digitalWrite(pinLayerList[0], 1);
@@ -312,4 +327,9 @@ bool Cube::validPoint(Point p) {
 
 bool Cube::validPoint(Point p) const {
 	return validPoint(p.x, p.y, p.z);
+}
+
+
+Point Cube::pinNum2Point(int num) {
+	return Point((num) % dimX, (num / dimX) % dimY, (num / sizeXY) % dimZ);
 }
