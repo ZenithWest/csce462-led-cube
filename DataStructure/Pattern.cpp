@@ -5,6 +5,7 @@ Pattern::Pattern(Cube* c) {
 	cube = c;
 	currentFrame = 0;
 	totalFrames = 0;
+	srand(1000);
 }
 
 
@@ -80,6 +81,9 @@ void Pattern::initializePattern(int num) {
 	case 103:
 		totalFrames = 107;
 		break;
+	case 104:
+		totalFrames = 5;
+		break;
 	default:
 		break;
 	}
@@ -96,6 +100,9 @@ void Pattern::nextFrame() {
 		break;
 	case 103:
 		pattern103(currentFrame);
+		break;
+	case 104:
+		pattern104(currentFrame);
 		break;
 	default:
 		break;
@@ -155,5 +162,13 @@ void Pattern::pattern103(int frame) {
 		cube->setPin(currentFrame, true);
 	} else {
 		cube->setPin((totalFrames - currentFrame), false);
+	}
+}
+
+void Pattern::pattern104(int frame) {
+	//cube->clear();
+	if (currentFrame == 0) {
+		cube->flipPin(rand() % (cube->sizeXYZ));
+		
 	}
 }
