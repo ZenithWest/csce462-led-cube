@@ -1,16 +1,35 @@
+#include "Cube.h"
+#include "Snake.h"
+
 const int joyH = 1;        // L/R Parallax Thumbstick
 const int joyV = 2;        // U/D Parallax Thumbstick
 
+Snake* snake;// = new Snake(4);
+Snake* snake2;
 void setup() {
   // Inizialize Serial
- // Serial.begin(9600);
+  Serial.begin(9600);
+  snake = new Snake(3);
+ // snake2 = new Snake(3);
 }
+int wait = 10;
 void loop(){
 
     // Display Joystick values using the serial monitor
     outputJoystick();
     
-    delay(200);                                      
+    if(wait < 0)
+    {
+      snake->Move();
+ //     snake2->Move();
+    }
+    else
+    {
+      Serial.println(wait);
+      wait = wait - 1;
+    }
+    
+    delay(500);                                      
 
 }
 void outputJoystick(){
