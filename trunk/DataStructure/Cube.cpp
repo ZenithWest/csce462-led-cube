@@ -297,6 +297,12 @@ void Cube::BW_ReceiveData() {
 
 void Cube::BW_WritePins() {
 	for (int z=0; z<dimZ; ++z) {
+		// Removes 'ghosting' LEDs
+		for (int x=0; x<dimX; ++x) {
+			for (int y=0; y<dimY; ++y) {
+				digitalWrite(pinBaseList2D[x][y], 1);
+			}
+		}
 		if (z==0) {
 			digitalWrite(pinLayerList[dimZ-1], 0);
 			digitalWrite(pinLayerList[0], 1);
@@ -305,6 +311,8 @@ void Cube::BW_WritePins() {
 			digitalWrite(pinLayerList[z], 1);
 		}
 		
+		delay(1); // Ghosting
+
 		for (int x=0; x<dimX; ++x) {
 			for (int y=0; y<dimY; ++y) {
 				if (data3D[x][y][z]) {

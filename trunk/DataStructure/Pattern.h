@@ -25,5 +25,6 @@ public:
 	void pattern103(int frame);
 	void pattern104(int frame);
 	void patternTranslate(int frame);
+	void printCharacter(char c);
 };
 
