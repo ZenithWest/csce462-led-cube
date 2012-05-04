@@ -337,3 +337,100 @@ bool Cube::validPoint(Point p) const {
 Point Cube::pinNum2Point(int num) {
 	return Point((num) % dimX, (num / dimX) % dimY, (num / sizeXY) % dimZ);
 }
+
+
+void Cube::translate(int dirX, int dirY, int dirZ) {
+	if (dirZ > 0) {
+		for (int x = 0; x<dimX; ++x) {
+			for (int y = 0; y<dimY; ++y) {
+				for (int z=dimZ-1; z>0; --z) {
+					set(x, y, z, get(x,y,z-1));
+				}
+			}
+		}
+
+		for (int x = 0; x<dimX; ++x) {
+			for (int y = 0; y<dimY; ++y) {
+				set(x, y, 0, false);
+			}
+		}
+	} else if (dirZ < 0) {
+		for (int x = 0; x<dimX; ++x) {
+			for (int y = 0; y<dimY; ++y) {
+				for (int z=0; z<dimZ-1; --z) {
+					set(x, y, z, get(x,y,z+1));
+				}
+			}
+		}
+
+		for (int x = 0; x<dimX; ++x) {
+			for (int y = 0; y<dimY; ++y) {
+				set(x, y, dimZ-1, false);
+			}
+		}
+	}
+
+
+
+	if (dirX > 0) {
+		for (int z = 0; z<dimZ; ++z) {
+			for (int y = 0; y<dimY; ++y) {
+				for (int x=dimX-1; x>0; --x) {
+					set(x, y, z, get(x-1,y,z));
+				}
+			}
+		}
+
+		for (int z = 0; z<dimZ; ++z) {
+			for (int y = 0; y<dimY; ++y) {
+				set(0, y, z, false);
+			}
+		}
+	} else if (dirX < 0) {
+		for (int z = 0; z<dimZ; ++z) {
+			for (int y = 0; y<dimY; ++y) {
+				for (int x=0; x<dimX-1; --x) {
+					set(x, y, z, get(x+1,y,z));
+				}
+			}
+		}
+
+		for (int z = 0; z<dimZ; ++z) {
+			for (int y = 0; y<dimY; ++y) {
+				set(dimX-1, y, z, false);
+			}
+		}
+	}
+
+
+
+	if (dirY > 0) {
+		for (int x = 0; x<dimX; ++x) {
+			for (int z = 0; z<dimZ; ++z) {
+				for (int y=dimY-1; y>0; --y) {
+					set(x, y, z, get(x,y-1,z));
+				}
+			}
+		}
+
+		for (int x = 0; x<dimX; ++x) {
+			for (int z = 0; z<dimZ; ++z) {
+				set(x, 0, z, false);
+			}
+		}
+	} else if (dirY < 0) {
+		for (int x = 0; x<dimX; ++x) {
+			for (int z = 0; z<dimZ; ++z) {
+				for (int y=0; y<dimY-1; --y) {
+					set(x, y, z, get(x,y+1,z));
+				}
+			}
+		}
+
+		for (int x = 0; x<dimX; ++x) {
+			for (int z = 0; z<dimZ; ++z) {
+				set(x, dimY-1, z, false);
+			}
+		}
+	}
+}

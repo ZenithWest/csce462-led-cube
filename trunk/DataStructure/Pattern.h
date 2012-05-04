@@ -24,5 +24,6 @@ public:
 	void pattern102(int frame);
 	void pattern103(int frame);
 	void pattern104(int frame);
+	void patternTranslate(int frame);
 };
 
