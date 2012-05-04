@@ -7,11 +7,16 @@ Snake::Snake(int s)
 }
 void Snake::Reset()
 {
+	// What tha....
+	// Maybe you were meaning this:
+	// for (int i=0; i < snake.size(); ++i)
+	//		delete snake[i];
+	//	snake.clear();
 	while(snake.size() > 0)
 	{
 		Point* p = snake.front();
 		delete p;
-		snake.erase(snake.begin(), p);
+		snake.erase(snake.begin()); //snake.erase(snake.begin(), p);
 	}
 	snake.push_back(new Point(1,0,0));
 	snake.push_back(new Point(2,0,0));

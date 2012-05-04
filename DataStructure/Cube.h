@@ -94,6 +94,8 @@ struct Cube {
 	bool validPoint(Point p);
 	bool validPoint(Point p) const;
 
+	// simple translation in direction (neg, none, pos) directions.
+	void translate(int dirX, int dirY, int dirZ);
 	
 
 	Point pinNum2Point(int num);

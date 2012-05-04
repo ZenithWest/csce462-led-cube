@@ -57,6 +57,8 @@ void Pattern::receiveData() {
 // 101: Vertial layers
 // 102: Spinning Columns
 // 103: Fill
+// 104: Random
+// 105-107: Translate with Random
 
 void Pattern::initializePattern(int num) {
 	if (num == 100) {
@@ -84,6 +86,11 @@ void Pattern::initializePattern(int num) {
 	case 104:
 		totalFrames = 5;
 		break;
+	case 105:
+	case 106:
+	case 107:
+		totalFrames = 25;
+		break;
 	default:
 		break;
 	}
@@ -103,6 +110,11 @@ void Pattern::nextFrame() {
 		break;
 	case 104:
 		pattern104(currentFrame);
+		break;
+	case 105:
+	case 106:
+	case 107:
+		patternTranslate(currentFrame);
 		break;
 	default:
 		break;
@@ -167,8 +179,37 @@ void Pattern::pattern103(int frame) {
 
 void Pattern::pattern104(int frame) {
 	//cube->clear();
-	if (currentFrame == 0) {
+	//if (currentFrame == 0) {
 		cube->flipPin(rand() % (cube->sizeXYZ));
 		
+	//}
+}
+
+
+void Pattern::patternTranslate(int frame) {
+	if (currentFrame == 0) {
+		if (patternNumber == 105) {
+			cube->translate(0,0,1);
+			for (int i=0; i<cube->sizeXY; ++i) {
+				cube->setPin(i, rand() % 2);
+			}
+		}
+		else if (patternNumber == 106) {
+			cube->translate(0,1,0);
+			for (int x=0; x<cube->dimX; ++x) {
+				for (int z=0; z<cube->dimZ; ++z) {
+					cube->set(x, 0, z, rand() % 2);
+				}
+			}
+		}
+		else if (patternNumber == 107) {
+			cube->translate(1,0,0);
+			for (int z=0; z<cube->dimZ; ++z) {
+				for (int y=0; y<cube->dimY; ++y) {
+					cube->set(0, y, z, rand() % 2);
+				}
+			}
+		}
 	}
 }
+
