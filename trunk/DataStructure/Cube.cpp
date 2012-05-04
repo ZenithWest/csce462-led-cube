@@ -34,6 +34,11 @@ void Cube::initializeData3D() {
 	}
 }
 
+void Cube::initializeBuffer() {
+	bufferSize = ceil(sizeXYZ / 8.0) + 3;
+	buffer = (char*)malloc(bufferSize);
+}
+
 void Cube::initializePinBaseList(int* pins, int num) {
 	pinBaseCount = num;
 	pinBaseList1D = (int*)malloc(pinBaseCount*sizeof(int));
@@ -54,12 +59,17 @@ void Cube::initializePinLayerList(int* pins, int num) {
 void Cube::deallocateMemory() {
 	free(data1D);
 	data1D = NULL;
+
 	for(int i=0; i<dimX; ++i) {
 		free(data3D[i]);
 		data3D[i] = NULL;
 	}
+
 	free(data3D);
 	data3D = NULL;
+
+	free(buffer);
+	buffer = NULL;
 }
 
 Cube::Cube(int x, int y, int z) {
@@ -229,14 +239,32 @@ Cube& Cube::combine(const Cube& cube) {
 }
 
 
+void Cube::compactBuffer() {
+	memset(buffer, 0, bufferSize);
+	buffer[0] = HEADER_BUFFER;
+	*(short*)(&buffer[1]) = sizeXYZ;
+	
+	char* tempBuffer = buffer + 3;
+	for (int i=0; i<sizeXY; ++i) {
+		if (data1D[i])
+			bitSet(tempBuffer[i], i & 7);
+	}
+}
 
 void Cube::sendData() {
-	Serial.write((uint8_t*)data1D, size*sizeof(bool));
+	compactBuffer();
+	Serial.write((uint8_t*)buffer, bufferSize*sizeof(char));
 }
 
 void Cube::receiveData() {
 	int i = 0;
-	Serial.readBytes((char*)data1D, size*sizeof(bool));
+	char header = Serial.read();
+	if (header == HEADER_BUFFER) {
+		short tempSize = (short(Serial.read()) << 8) + Serial.read();
+		buffer[0] = header;
+		*(short*)(&buffer[1]) = tempSize;
+		Serial.readBytes((char*)(buffer + 3), tempSize*sizeof(bool));
+	}
 }
 
 void Cube::BW_ReceiveData() {

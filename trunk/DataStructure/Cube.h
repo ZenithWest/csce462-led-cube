@@ -15,30 +15,39 @@ struct Point;
 
 */
 
+#define HEADER_BUFFER 'B'
+
 
 struct Cube {
 	int dimX;
 	int dimY;
 	int dimZ;
+	
 	int size;
 	int sizeXZ;
 	int sizeXY;
 	int sizeYZ;
-	int sizeXYZ;
+	int sizeXYZ; // same as size
+	
 	int* pinBaseList1D;
 	int** pinBaseList2D;
 	int pinBaseCount;
 	int pinBaseSize;
+	
 	int* pinLayerList;
 	int pinLayerCount;
+	
 	Point center;
 
 	bool* data1D;
 	bool*** data3D;
+	char* buffer; // To store a compact version of data1D for transmission
+	short bufferSize;
 
 	void initializeSize(int x, int y, int z);
 	void initializeData1D();
 	void initializeData3D();
+	void initializeBuffer();
 	void initializePinBaseList(int* pins, int num);
 	void initializePinLayerList(int* pins, int num);
 	void deallocateMemory();
@@ -49,6 +58,7 @@ struct Cube {
 
 	Cube& operator=(const Cube& rhs);
   
+
 	bool get(int x, int y, int z);	// Returns true if LED on, false otherwise
 	bool get(int x, int y, int z) const;
 	void set(int x, int y, int z, bool value);
@@ -81,7 +91,8 @@ struct Cube {
 	Cube* combine(Cube* cube);
 	Cube& combine(const Cube& cube);
 
-
+	
+	void compactBuffer();
 	void sendData();
 	void receiveData();
 	void BW_WritePins();
