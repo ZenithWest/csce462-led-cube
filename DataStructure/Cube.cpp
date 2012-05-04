@@ -311,7 +311,8 @@ void Cube::BW_WritePins() {
 			digitalWrite(pinLayerList[z], 1);
 		}
 		
-		delay(1); // Ghosting
+		//delay(1); // Ghosting
+		delayMicroseconds(100);
 
 		for (int x=0; x<dimX; ++x) {
 			for (int y=0; y<dimY; ++y) {
