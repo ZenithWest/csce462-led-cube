@@ -82,7 +82,8 @@ void Pattern::initializePattern(int num) {
 		totalFrames = 80;
 		break;
 	case 103:
-		totalFrames = 107;
+		totalFrames = 107101
+			;
 		break;
 	case 104:
 		totalFrames = 5;
