@@ -13,6 +13,7 @@ Pattern::~Pattern(void) {
 
 }
 
+// my testing function
 void Pattern::receiveData() {
 	delay(1);
 	if (Serial.available()) {
@@ -43,7 +44,7 @@ void Pattern::receiveData() {
 		} else if (led == 99) {
 			cube->setAll();
 			patternNumber = 0;
-		} else if (led > 99) {
+		} else if (led > 99 && led < 200) {
 			initializePattern(led);
 		}
 		
@@ -213,3 +214,196 @@ void Pattern::patternTranslate(int frame) {
 	}
 }
 
+void Pattern::printCharacter(char c) {
+	switch (c) {
+	case 'A':
+	case 'a':
+		cube->set(0,0,0);
+		cube->set(2,0,0);
+		cube->set(0,0,1);
+		cube->set(2,0,1);
+		cube->set(1,0,1);
+		cube->set(1,0,2);
+		break;
+	case 'B':
+	case 'b':
+		cube->set(2,0,0);
+		cube->set(2,0,1);
+		cube->set(2,0,2);
+		cube->set(2,0,4);
+
+		cube->set(1,0,0);
+		cube->set(1,0,1);
+		break;
+	case 'C':
+	case 'c':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+
+		cube->set(2,0,1);
+		break;
+	case 'D':
+	case 'd':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+
+		cube->set(0,0,0);
+		cube->set(0,0,1);
+		cube->set(0,0,2);
+		cube->set(0,0,3);
+		break;
+	case 'E':
+	case 'e':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+
+		cube->set(0,0,4);
+		cube->set(1,0,4);
+		cube->set(2,0,4);
+
+		cube->set(2,0,1);
+		cube->set(2,0,3);
+		break;
+	case 'F':
+	case 'f':
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		break;
+	case 'G':
+	case 'g':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+		break;
+	case 'H':
+	case 'h':
+		break;
+	case 'I':
+	case 'i':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		cube->set(1,0,1);
+		break;
+	case 'J':
+	case 'j':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		break;
+	case 'K':
+	case 'k':
+		cube->set(2,0,0);
+		cube->set(2,0,1);
+		cube->set(2,0,2);
+		cube->set(1,0,1);
+		cube->set(0,0,0);
+		cube->set(0,0,2);
+		break;
+	case 'L':
+	case 'l':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+		break;
+	case 'M':
+	case 'm':
+		break;
+	case 'N':
+	case 'n':
+		cube->set(0,0,0);
+		cube->set(0,0,1);
+		cube->set(0,0,2);
+		cube->set(2,0,0);
+		cube->set(2,0,1);
+		cube->set(2,0,2);
+		cube->set(1,0,1);
+		break;
+	case 'O':
+	case 'o':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		break;
+	case 'P':
+	case 'p':
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		break;
+	case 'Q':
+	case 'q':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		break;
+	case 'R':
+	case 'r':
+		break;
+	case 'S':
+	case 's':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+
+		cube->set(0,0,2);
+		cube->set(1,0,2);
+		cube->set(2,0,2);
+		break;
+	case 'T':
+	case 't':
+		break;
+	case 'U':
+	case 'u':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+		break;
+	case 'V':
+	case 'v':
+		cube->set(1,0,0);
+		break;
+	case 'W':
+	case 'w':
+		break;
+	case 'X':
+	case 'x':
+		break;
+	case 'Y':
+	case 'y':
+		cube->set(1,0,0);
+		break;
+	case 'Z':
+	case 'z':
+		cube->set(0,0,0);
+		cube->set(1,0,0);
+		cube->set(2,0,0);
+		break;
+	case ' ':
+		cube->clear();
+		break;
+	}
+}

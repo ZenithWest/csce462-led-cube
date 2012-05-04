@@ -34,6 +34,12 @@ int counter = 0;
 
 void loop() {
   cube->BW_WritePins();
+  /*
+  if (Serial.available() && (counter % 100) == 0) {
+	  cube->clear();
+	  pattern->printCharacter(Serial.read());
+	}
+  counter++;*/
   pattern->receiveData();
   pattern->nextFrame();
 }
