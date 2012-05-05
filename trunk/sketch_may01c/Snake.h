@@ -31,6 +31,7 @@ class Snake {
 	void Draw();
 	void Move(int x, int y, int z);
 	void Move();
+        void Move(int x, int y);
 	bool CheckIfInsidePlayer(PointList* p);
 	void GameOver();
 };
