@@ -12,15 +12,17 @@ void setup() {
   snake = new Snake(3);
  // snake2 = new Snake(3);
 }
-int wait = 10;
+int wait = 3;
 void loop(){
 
     // Display Joystick values using the serial monitor
-    outputJoystick();
+    //outputJoystick();
     
     if(wait < 0)
     {
-      snake->Move();
+      int x = analogRead(joyH);
+      int y = analogRead(joyV);
+      snake->Move(x,y);
  //     snake2->Move();
     }
     else
