@@ -31,9 +31,9 @@ void setup() {
 
 	cube->initializePinBaseList(&pinBaseList[0], 9);
 	cube->initializePinLayerList(&pinLayerList[0], 6);
-        
-        snake = new Snake(cube,3);
-       //cube->setHIGH(0,0,2);
+		  
+		  snake = new Snake(cube,3);
+		 //cube->setHIGH(0,0,2);
 	//pattern = new Pattern(cube);
 }
 
@@ -47,7 +47,7 @@ void loop() {
   //cube->setHIGH(2,0,0);
   if(counter % 500 == 0) 
   {
-    snake->Move(x,y);
+	 snake->Move(x,y);
   }
   //snake->Draw();
   cube->BW_WritePins();
