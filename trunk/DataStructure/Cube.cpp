@@ -76,6 +76,7 @@ Cube::Cube(int x, int y, int z) {
 	initializeSize(x, y, z);
 	initializeData1D();
 	initializeData3D();
+	initializeBuffer();
 }
 
 Cube::Cube(const Cube& c) {
@@ -258,7 +259,7 @@ void Cube::sendData() {
 
 void Cube::receiveData() {
 	int i = 0;
-        if (Serial.available()) {
+		  if (Serial.available()) {
 	char header = Serial.read();
 	if (header == HEADER_BUFFER) {
 		short tempSize = (short(Serial.read()) << 8) + Serial.read();
@@ -266,7 +267,7 @@ void Cube::receiveData() {
 		*(short*)(&buffer[1]) = tempSize;
 		Serial.readBytes((char*)(buffer + 3), tempSize*sizeof(bool));
 	}
-        }
+		  }
 }
 
 void Cube::BW_ReceiveData() {
