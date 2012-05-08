@@ -4,11 +4,12 @@
 #include "Cube.h"
 #include "Pattern.h"
 #include "Snake.h"
+#include "Pong.h"
 
 Cube* cube;
 Pattern* pattern;
 Snake* snake;
-
+Pong* pong;
 const int joyH = 3;        // L/R Parallax Thumbstick
 const int joyV = 4;        // U/D Parallax Thumbstick
 
