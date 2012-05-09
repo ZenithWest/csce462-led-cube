@@ -1,4 +1,5 @@
 #include "Pong.h"
+
 Pong::Pong(Cube* c, int s, int paddleSize)
 {
 	size = s;
@@ -16,9 +17,13 @@ void Pong::Reset()
 	ball->Position->x = size/2;
 	ball->Position->y = size/2;
 	ball->Position->z = size/2;
-	ball->Direction->x = random(1);
-	ball->Direction->y = random(1);
-	ball->Direction->z = random(1);
+	ball->Direction->x = random(3)-1;
+	ball->Direction->y = random(3)-1;
+        while(ball->Direction->y == 0)
+          ball->Direction->y = random(3)-1;
+        ball->Direction->z = random(3)-1;
+        
+       // Serial.println(ball->Direction->x);
 	p1->Position->x = 0;
 	p1->Position->y = 0;
 	p1->Position->z = 0;
@@ -35,11 +40,13 @@ void Pong::MovePaddle1(int x, int y)
 	if(x >800)
 		x1 = 1;
 	if(x < 200)
-		x1 = 0;
+		x1 = -1;
 	if(y >800)
 		z1 = 1;
 	if(y < 200)
-		z1 = 0;
+		z1 = -1;
+      //  Serial.println(x1);
+       
 	MovePaddle(p1,x1,z1);
 	MovePaddle2();
 }
@@ -51,11 +58,13 @@ void Pong::MovePaddle(Paddle* p, int x1, int z1)
 	int x = pos->x;
 	int y = pos->y;
 	int z = pos->z;
-	if((x = 0 && x1 != -1) || (x-size-1 == 0 && x1 != 1))
+       
+	if((x == 0 && x1 != -1) || (x+p->size==size && x1 != 1))
 	{
+               // Serial.println("CHANGED");
 		pos->x = x1+x;
 	}
-	if((z = 0 && z1 != -1) || (z-size-1 == 0 && z1 != 1))
+	if((z == 0 && z1 != -1) || (z+p->size==size && z1 != 1))
 	{
 		pos->z = z1+z;
 	}	
@@ -91,21 +100,20 @@ void Pong::Draw()
 	
 	for(int i = p1->Position->x; i < p1->Position->x + p1->size; i++)
 	{
-		for(int j = p1->Position->z; j < p1->Position->z + p1->size; i++)
+		for(int j = p1->Position->z; j < p1->Position->z + p1->size; j++)
 		{
-			cube->setHIGH(p1->Position->x,p1->Position->y,p1->Position->z);
-		}
-	}
+			cube->setHIGH(i,p1->Position->y,j);
+		}	
+        }
 	
 	for(int i = p2->Position->x; i < p2->Position->x + p2->size; i++)
 	{
-		for(int j = p2->Position->z; j < p2->Position->z + p2->size; i++)
+		for(int j = p2->Position->z; j < p2->Position->z + p2->size; j++)
 		{
-			cube->setHIGH(p2->Position->x,p2->Position->y,p2->Position->z);
+			cube->setHIGH(i,p2->Position->y,j);
 		}
 	}
-	
-	cube->BW_WritePins();
+	//cube->BW_WritePins();
 }
 void Pong::MoveBall()
 {
@@ -114,6 +122,8 @@ void Pong::MoveBall()
 	int nx = ball->Direction->x + ball->Position->x;
 	int ny = ball->Direction->y + ball->Position->y;
 	int nz = ball->Direction->z + ball->Position->z;
+        //Serial.println(nx);
+        //Serial.println(nz);
 	if(nx < 0)
 	{
 		ball->Direction->x = ball->Direction->x * -1;
@@ -123,11 +133,12 @@ void Pong::MoveBall()
 	{
 		ball->Direction->x = ball->Direction->x * -1;
 		nx = ball->Direction->x + ball->Position->x;
+      
 	}
 	if(nz < 0)
 	{
 		ball->Direction->z = ball->Direction->z * -1;
-		nx = ball->Direction->z + ball->Position->z;
+		nz = ball->Direction->z + ball->Position->z;
 	}
 	if(nz >= size)
 	{
@@ -139,14 +150,29 @@ void Pong::MoveBall()
 		GameOver();
 		return;
 	}
+        Serial.println("OVER");
+        Serial.println(nx);
+         Serial.println(ny);
+        Serial.println(nz);
 	PointList* p = p1->Position;
 	int s = p1->size;
+        boolean flag = true;
 	if(p->y == ny)
 	{
-		if(cube->get(nx,ny,nz) == 1);
+            Serial.println("PLAYER 1");
+            int dx = p1->Position->x - nx;
+          //  if(dx < 0) {dx *= -1;}
+            int dz = p1->Position->z - nz;
+            //if (dz <0) {dz *=-1;}
+		if((dx <= 0 && dx*-1<p1->size)&& (dz <= 0 && dz*-1<p1->size) )
 		{
+                     Serial.println("HIT");
+                     Serial.println(dx);
+                     Serial.println(dz);
 			ball->Direction->y = 1;
-			ny = ball->Direction->y + ball->Position->y;
+                        flag = false;
+			//ny = ball->Direction->y + ball->Position->y;
+                        
 			/*int q = -1 * random(1);
 			int w = -1 * random(1);
 			if(q && w == 0)
@@ -161,16 +187,33 @@ void Pong::MoveBall()
 	}
 	p = p2->Position;
 	s = p2->size;
-	if(p->y == ny)
+	if(p->y == ny && flag)
 	{
-		if(cube->get(nx,ny,nz) == size-1);
-		{
+            Serial.println("PLAYER 2");
+		int dx = p2->Position->x - nx;
+          //  if(dx < 0) {dx *= -1;}
+            int dz = p2->Position->z - nz;
+            //if (dz <0) {dz *=-1;}
+		if((dx <= 0 && dx*-1<p2->size)&& (dz <= 0 && dz*-1<p2->size) )
+{
+                         Serial.println("HIT");
 			ball->Direction->y = -1;
-			ny = ball->Direction->y + ball->Position->y;
+			//ny = ball->Direction->y + ball->Position->y;
 		}
 	}
+        ball->Position->x = nx;
+           ball->Position->y = ny;
+         
+         ball->Position->z = nz;
+        Serial.println("NEW");
+        
+        Serial.println(nx);
+          
+        Serial.println(nz);
+        Serial.println(ny);
 }
 void Pong::GameOver()
 {
   gameover = true;
+  Serial.println("GAMEOVER");
 }

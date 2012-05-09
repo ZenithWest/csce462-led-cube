@@ -1,5 +1,5 @@
-#ifndef PONG_H
-#define PONG_H
+#ifndef BREAKOUT_H
+#define BREAKOUT_H
 
 #include <new.h>
 #include "VSPDE.h"
@@ -15,39 +15,31 @@
 
 */
 
-/*
-class Paddle{
-public:
-Paddle(int Size){Position = new PointList(0,0,0); size = Size; speed = 50;}
-PointList* Position;
-int size;
-int speed;
-};*/
 
-class PongBall{
+
+
+class Ball{
 public:
-PongBall(){Position = new PointList(0,0,0); Direction = new PointList(0,0,0);speed = 50;}
+Ball(){Position = new PointList(0,0,0); Direction = new PointList(0,0,0);speed = 50;}
 PointList* Position;
 PointList* Direction;
 int speed;
 };
 
-class Pong {
+class Breakout {
 	int size;
 	Paddle* p1;
-	Paddle* p2;
-	PongBall* ball;
-        Cube* cube;
+	Ball* ball;
+    Cube* cube;
+	Cube* Blocks;
     bool gameover;
 	public:
-	Pong(Cube* cube,int Size, int paddlesize); //size of cube;
+	Breakout(Cube* cube, int Size, int paddlesize); //size of cube;
 	void Reset();
 	void MoveBall();
 	void MovePaddle(Paddle* p, int x, int z); //x,z -1 or 0 or 1 ... direction
 	void MovePaddle1(int x, int y); // x y of joystick 1..1023
-        void MovePaddle2();
 	void Draw();
-	void Move(int x, int y, int z);
 	void GameOver();
 };
 
