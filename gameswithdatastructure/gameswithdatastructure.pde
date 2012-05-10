@@ -23,7 +23,7 @@ int pinBaseList[49] = { 21,22,23,24,25,26,27,28,
                         50,51,52,53,14,15,16,
                         17,18,19,20, 2, 3, 4,
                          5, 6, 7, 8, 9,10 };
-int pinLayerList[6] = {11, 12, 13};
+int pinLayerList[3] = {11, 12, 13};
 
 //
  MenuScreen* menu;
@@ -31,16 +31,16 @@ void setup() {
 	Serial.begin(115200);
 
 
-	for (int xy=0; xy<9; ++xy)
+	for (int xy=0; xy<49; ++xy)
 		pinMode(pinBaseList[xy], OUTPUT);
 	
-	for (int z=0; z<6; ++z)
+	for (int z=0; z<3; ++z)
 		pinMode(pinLayerList[z], OUTPUT);
 
-	cube = new Cube(3,3,6);
+	cube = new Cube(7,7,7);
 
-	cube->initializePinBaseList(&pinBaseList[0], 9);
-	cube->initializePinLayerList(&pinLayerList[0], 6);
+	cube->initializePinBaseList(&pinBaseList[0], 49);
+	cube->initializePinLayerList(&pinLayerList[0], 3);
         // menu = new MenuScreen(cube,3);
        // breakout = new Breakout(cube,3,2);
         //pong = new Pong(cube,3,2);
@@ -53,15 +53,15 @@ void setup() {
 int counter = 1;
 
 void loop() {
-  int x = analogRead(joyH);
-  int y = analogRead(joyV);
+  //int x = analogRead(joyH);
+  //int y = analogRead(joyV);
   
  // Serial.println(x);
   //cube->setHIGH(2,0,0);
   //pong->Draw();
  // breakout->Draw();
  //menu->Joystick(x,y);
-  cube->setHIGH(2,2,4);
+  //cube->setHIGH(2,2,4);
   
   if(counter % 30 == 0) 
   {
@@ -93,5 +93,5 @@ void loop() {
   //cube->receiveData();
   pattern->receiveData();
   pattern->nextFrame();
-  //delay(10);
+ // delay(100);
 }
