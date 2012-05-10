@@ -16,8 +16,14 @@ Breakout* breakout;
 const int joyH = 1;        // L/R Parallax Thumbstick
 const int joyV = 0;        // U/D Parallax Thumbstick
 
-int pinBaseList[9] = { 52, 50, 48, 46, 44, 42, 40, 38, 36 };
-int pinLayerList[6] = {22, 24, 26, 23, 25, 27};
+int pinBaseList[49] = { 21,22,23,24,25,26,27,28,
+                        29,30,31,32,33,34,35,
+                        36,37,38,39,40,41,42,
+                        43,44,45,46,47,48,49,
+                        50,51,52,53,14,15,16,
+                        17,18,19,20, 2, 3, 4,
+                         5, 6, 7, 8, 9,10 };
+int pinLayerList[6] = {11, 12, 13};
 
 //
  MenuScreen* menu;
@@ -35,12 +41,12 @@ void setup() {
 
 	cube->initializePinBaseList(&pinBaseList[0], 9);
 	cube->initializePinLayerList(&pinLayerList[0], 6);
-         menu = new MenuScreen(cube,3);
+        // menu = new MenuScreen(cube,3);
        // breakout = new Breakout(cube,3,2);
         //pong = new Pong(cube,3,2);
         //snake = new Snake(cube,3);
        //cube->setHIGH(0,0,2);
-	//pattern = new Pattern(cube);
+	pattern = new Pattern(cube);
 }
 
 
@@ -54,7 +60,7 @@ void loop() {
   //cube->setHIGH(2,0,0);
   //pong->Draw();
  // breakout->Draw();
- menu->Joystick(x,y);
+ //menu->Joystick(x,y);
   cube->setHIGH(2,2,4);
   
   if(counter % 30 == 0) 
@@ -85,7 +91,7 @@ void loop() {
 	}
 	counter++;*/
   //cube->receiveData();
-  //pattern->receiveData();
-  //pattern->nextFrame();
+  pattern->receiveData();
+  pattern->nextFrame();
   //delay(10);
 }

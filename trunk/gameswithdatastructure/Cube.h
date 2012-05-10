@@ -97,7 +97,7 @@ struct Cube {
 	void receiveData();
 	void BW_WritePins();
 	void BW_ReceiveData();
-
+        void decoder(int z);
 
 
 	bool validPoint(double x, double y, double z);

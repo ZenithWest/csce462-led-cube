@@ -13,6 +13,7 @@
 #include "Snake.h"
 #include "Pong.h"
 #include "Breakout.h"
+#include "Pattern.h"
 /*
 	Cube makes the assumption that the size doesn't change (copy and assignment would crash otherwise)
 
@@ -23,6 +24,7 @@ class MenuScreen {
         int countdown;
         int timetoScroll;
 	int currentSelection;
+        int patternNumber;
         int size;
 	bool inMenu;
 	int minSelection;
@@ -30,7 +32,8 @@ class MenuScreen {
 	Snake* snake;
 	Pong* pong;
 	Breakout* breakout;
-    Cube* cube;
+        Pattern* pattern;
+        Cube* cube;
 	Cube* Blocks;
 	public:
 	MenuScreen(Cube* c, int size); //size of cube;
