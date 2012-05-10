@@ -297,6 +297,37 @@ void Cube::BW_ReceiveData() {
 	
 }
 
+void Cube::decoder(int blah) {
+  pinLayerList[0] = 0;
+  pinLayerList[1] = 0;
+  pinLayerList[2] = 0;
+  switch(blah) {
+   case 0:
+   break;
+   case 1:
+   digitalWrite(pinLayerList[0], 1);
+   break;
+   case 2:
+   digitalWrite(pinLayerList[1], 1);
+   break;
+   case 3:
+   digitalWrite(pinLayerList[1], 1);
+   digitalWrite(pinLayerList[0], 1);
+   break;
+    case 4:
+   digitalWrite(pinLayerList[2], 1);
+   break;
+    case 5:
+   digitalWrite(pinLayerList[2], 1);
+   digitalWrite(pinLayerList[0], 1);
+   break;
+   case 6:
+   digitalWrite(pinLayerList[2], 1);
+   digitalWrite(pinLayerList[1], 1);
+   break;
+  } 
+}
+
 void Cube::BW_WritePins() {
 	for (int z=0; z<dimZ; ++z) {
 		// Removes 'ghosting' LEDs
@@ -305,6 +336,8 @@ void Cube::BW_WritePins() {
 				digitalWrite(pinBaseList2D[x][y], 1);
 			}
 		}
+                decoder(z);
+                 /*
 		if (z==0) {
 			digitalWrite(pinLayerList[dimZ-1], 0);
 			digitalWrite(pinLayerList[0], 1);
@@ -312,7 +345,7 @@ void Cube::BW_WritePins() {
 			digitalWrite(pinLayerList[z-1], 0);
 			digitalWrite(pinLayerList[z], 1);
 		}
-		
+		*/
 		//delay(1); // Ghosting
 		delayMicroseconds(100);
 

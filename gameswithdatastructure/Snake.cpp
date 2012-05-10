@@ -30,15 +30,15 @@ int aaa = 0;
 PointList* Snake::SpawnApple()
 {
          aaa = aaa+1;
-	 PointList* p;
-         if(aaa == 1)
-             p = new PointList(0,2,0);//new PointList(random(sizee),random(sizee),random(sizee));
-         else
-             p = new PointList(0,2,0);
+	 PointList* p = new PointList(random(sizee),random(sizee),random(sizee));
+        // if(aaa == 1)
+          //   p = new PointList(0,2,0);//new PointList(random(sizee),random(sizee),random(sizee));
+        // else
+         //    p = new PointList(0,2,0);
 	 if(CheckIfInsidePlayer(p))
 	 {
-		// delete p;
-		// return SpawnApple();
+		 delete p;
+		 return SpawnApple();
 	}
          //Serial.println("SPAWNAPPLE");
           apple = p;
@@ -115,7 +115,7 @@ void Snake::Move(int x, int y, int z)
 
 	if(x < 0 || y < 0 || z < 0 || x >= sizee || y >= sizee || z >= sizee)
 	{
-                Serial.println(88);
+              //  Serial.println(88);
 	        delete p;
 		GameOver();
 	}
@@ -170,8 +170,7 @@ void Snake::Move()
         Serial.println(z);
         Serial.println(apple->x);
         Move(x,y,z);
-      }
-	
+      }	
 }
 void Snake::Move(int x, int y)
 {

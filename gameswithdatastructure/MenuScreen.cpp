@@ -11,11 +11,12 @@ void MenuScreen::Reset()
 {
     inMenu = true;
     minSelection = 0;
-    maxSelection = 2;
+    maxSelection = 3;
 	currentSelection = 0;
  counter = 0;
  timetoScroll = 50;
  countdown = 100;
+ patternNumber = 0;
 }
 
 void MenuScreen::Joystick(int x, int y)
@@ -96,6 +97,35 @@ void MenuScreen::Joystick(int x, int y)
 			}
 			pong->Draw();
 		}
+                else if(currentSelection == 3)
+		{
+			counter++;
+                        if(counter%40 == 0)
+                        {
+                            if(x > 800)
+  			    {
+  				patternNumber++;
+                                if(patternNumber%4 == 0)
+                                {
+                                  pattern->initializePattern(101);
+                                }
+                                if(patternNumber%4 == 1)
+                                {
+                                  pattern->initializePattern(102);
+                                }
+                                if(patternNumber%4 == 2)
+                                {
+                                  pattern->initializePattern(103);
+                                }
+                                if(patternNumber%4 == 3)
+                                {
+                                  pattern->initializePattern(104);
+                                }
+                            }
+  			}
+			//pattern->receiveData();
+                        pattern->nextFrame();
+		}
 	}
 }
 void MenuScreen::CreateGame()
@@ -106,6 +136,8 @@ void MenuScreen::CreateGame()
 		breakout = new Breakout(cube,size,2);
 	else if(currentSelection == 2)
 		snake = new Snake(cube,size);
+        else if(currentSelection == 2)
+		pattern = new Pattern(cube);
 	inMenu = false;
 	counter = 0;
         countdown = 100;
@@ -119,13 +151,16 @@ void MenuScreen::Draw()
 	{		
 		cube->setHIGH(0,0,size-1-i);	
         }
-        for(int i = 0; i < size; i++)
-	{		
-          for(int j = 0; j < size; j++)
-	    {		
-		cube->setHIGH(i,j,currentSelection);	
-             }
-	}
+        if(currentSelection < size)
+        {
+            for(int i = 0; i < size; i++)
+         	{		
+              for(int j = 0; j < size; j++)
+    	    {		
+    		cube->setHIGH(i,j,currentSelection);	
+                 }
+    	}
+        }
 }
 
 void MenuScreen::GameOver()
