@@ -298,9 +298,9 @@ void Cube::BW_ReceiveData() {
 }
 
 void Cube::decoder(int blah) {
-  pinLayerList[0] = 0;
-  pinLayerList[1] = 0;
-  pinLayerList[2] = 0;
+   digitalWrite(pinLayerList[0], 0);
+   digitalWrite(pinLayerList[1], 0);
+   digitalWrite(pinLayerList[2], 0);
   switch(blah) {
    case 0:
    break;

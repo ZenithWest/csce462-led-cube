@@ -35,10 +35,10 @@ void Pattern::receiveData() {
 
 		sprintf(str, "(%d,%d,%d)\n", int(ledM1) % cube->dimX, int(ledM1 / cube->dimX) % cube->dimY, int(ledM1 / cube->sizeXY) % cube->dimZ);
 		Serial.print(str);
-		if (led >= 0 && led <= cube->sizeXYZ) {
+		/*if (led >= 0 && led <= cube->sizeXYZ) {
 			cube->flip(cube->pinNum2Point(ledM1));
 			patternNumber = 0;
-		} else if (led == 98) {
+		} else*/ if (led == 98) {
 			cube->clear();
 			patternNumber = 0;
 		} else if (led == 99) {
@@ -76,7 +76,7 @@ void Pattern::initializePattern(int num) {
 	}
 	switch(num) {
 	case 101:
-		totalFrames = 110;
+		totalFrames = 130;
 		break;
 	case 102:
 		totalFrames = 80;
@@ -138,12 +138,16 @@ void Pattern::pattern101(int frame) {
 	else if (frame < 60) 
 		cube->setLayer(5, true);
 	else if (frame < 70) 
-		cube->setLayer(4, true);
+		cube->setLayer(6, true);
 	else if (frame < 80) 
-		cube->setLayer(3, true);
+		cube->setLayer(5, true);
 	else if (frame < 90) 
-		cube->setLayer(2, true);
+		cube->setLayer(4, true);
 	else if (frame < 100) 
+		cube->setLayer(3, true);
+	else if (frame < 110) 
+		cube->setLayer(2, true);
+	else if (frame < 120) 
 		cube->setLayer(1, true);
 	else
 		cube->setLayer(0, true);
